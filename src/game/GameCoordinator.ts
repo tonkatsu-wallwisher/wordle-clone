@@ -22,7 +22,7 @@ export default class GameCoordinator {
 
     for (
       let guessNumber = 0;
-      guessNumber < this.options.maxGuesses || guessedCorrectly;
+      guessNumber < this.options.maxGuesses && !guessedCorrectly;
       ++guessNumber
     ) {
       const guess = await guesser.nextGuess(gameState)
@@ -34,10 +34,7 @@ export default class GameCoordinator {
       const evaluation = await evaluator.evaluateGuess(guess)
       gameState.guesses.push(evaluation)
 
-      guessedCorrectly = evaluation.reduce(
-        (acc, charEval) => acc && charEval.result === 'correct',
-        true as boolean
-      )
+      guessedCorrectly = evaluation.every((char) => char.result === 'correct')
     }
 
     return gameState
