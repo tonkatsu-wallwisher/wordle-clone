@@ -42,7 +42,7 @@ export default class HumanGuesser implements Guesser {
 
       const promptForGuess = () =>
         new Promise<string>((resolve) => {
-          rl.question('Next guess:', (guess) => resolve(guess.trim().toLowerCase()))
+          rl.question('Next guess: ', (guess) => resolve(guess.trim().toLowerCase()))
         })
 
       const promptForValidGuess = async (): Promise<string> => {

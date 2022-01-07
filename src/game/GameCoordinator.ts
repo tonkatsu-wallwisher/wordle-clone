@@ -5,11 +5,6 @@ export interface GameOptions {
   maxGuesses: number
 }
 
-export interface GameStats {
-  result: 'success' | 'failure'
-  guesses: string[]
-}
-
 export default class GameCoordinator {
   readonly options: GameOptions
 
@@ -17,7 +12,7 @@ export default class GameCoordinator {
     this.options = options
   }
 
-  play = async (evaluator: Evaluator, guesser: Guesser): Promise<GameStats> => {
+  play = async (evaluator: Evaluator, guesser: Guesser): Promise<GameState> => {
     let guessedCorrectly = false
     const guesses: string[] = []
     const gameState: GameState = {
@@ -45,9 +40,6 @@ export default class GameCoordinator {
       )
     }
 
-    return {
-      result: guessedCorrectly ? 'success' : 'failure',
-      guesses,
-    }
+    return gameState
   }
 }
