@@ -1,6 +1,6 @@
 ## Wordle Clone
 
-![Screenshot](screenshot.png)
+[![asciicast](https://asciinema.org/a/5h2Be1cIUnAE1xLDqKnRF2Ffk.svg)](https://asciinema.org/a/5h2Be1cIUnAE1xLDqKnRF2Ffk)
 
 How to play locally:
 
