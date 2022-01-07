@@ -22,11 +22,11 @@ export default class HumanGuesser implements Guesser {
               .map((char) => {
                 switch (char.result) {
                   case 'correct':
-                    return chalk.green(char.character)
+                    return chalk.green(char.character.toUpperCase())
                   case 'misplaced':
-                    return chalk.yellow(char.character)
+                    return chalk.yellow(char.character.toUpperCase())
                   case 'wrong':
-                    return chalk.gray(char.character)
+                    return chalk.gray(char.character.toUpperCase())
                 }
               })
               .join('')
