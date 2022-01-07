@@ -1,5 +1,7 @@
 ## Wordle Clone
 
+![Screenshot](screenshot.png)
+
 How to play locally:
 
 ```sh
