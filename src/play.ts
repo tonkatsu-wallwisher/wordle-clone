@@ -6,6 +6,7 @@ import HumanGuesser from './guessers/HumanGuesser'
 import { Evaluator, GameParameters, Guesser } from './models/Interfaces'
 import _ from 'lodash'
 import formatCharEvaluation from './utils/formatCharEvaluation'
+import ParametricGuesser from './guessers/ParametricGuesser'
 
 const WORD_LENGTH = 5
 const MAX_GUESSES = 6
@@ -16,7 +17,11 @@ const gameParams: GameParameters = {
 }
 
 const evaluator: Evaluator = new RandomDictionaryWordEvaluator()
-const guesser: Guesser = new HumanGuesser()
+const guesser: Guesser = new ParametricGuesser({
+  uniqueness: 0.58,
+  presence: 0.71,
+  position: 0.23,
+})
 
 const coordinator = new GameCoordinator({ ...gameParams })
 
