@@ -23,3 +23,23 @@ Options:
   -e, --evaluator <type>  evaluator of player's guesses (choices: "random", "human", default: "random")
   -h, --help              display help for command
 ```
+
+### Ways to play
+
+If you want to let the AI play against a random word generator:
+
+```
+yarn play -p ai [-e random]
+```
+
+If you want to think of a word and let the AI guess it:
+
+```
+yarn play -p ai -e human
+```
+
+If you want to guess a randomly generated word yourself:
+
+```
+yarn play [-p human] [-e random]
+```
