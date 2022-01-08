@@ -29,7 +29,7 @@ Options:
 If you want to let the AI play against a random word generator:
 
 ```
-yarn play -p ai [-e random]
+yarn play -p ai
 ```
 
 If you want to think of a word and let the AI guess it:
@@ -41,5 +41,5 @@ yarn play -p ai -e human
 If you want to guess a randomly generated word yourself:
 
 ```
-yarn play [-p human] [-e random]
+yarn play
 ```
