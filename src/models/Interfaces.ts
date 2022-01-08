@@ -1,6 +1,8 @@
+export type EvaluationResult = 'correct' | 'misplaced' | 'wrong'
+
 export interface GuessCharacterEvaluation {
   character: string
-  result: 'correct' | 'misplaced' | 'wrong'
+  result: EvaluationResult
 }
 
 export type GuessEvaluation = Array<GuessCharacterEvaluation>

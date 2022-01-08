@@ -1,12 +1,20 @@
-import { GameState, GuessCharacterEvaluation, Guesser, GuessEvaluation } from '../models/Interfaces'
-import readline from 'readline'
 import chalk from 'chalk'
+import readline from 'readline'
+import { EvaluationResult, GameState, Guesser, GuessEvaluation } from '../models/Interfaces'
+import formatCharEvaluation from '../utils/formatCharEvaluation'
 import readDictionary from '../utils/readDictionary'
 
 // Used to display available/used characters to user
 const KEYBOARD_LAYOUT = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'].map((row) => row.split(''))
 // The maximum length of the string printed out for a keyboard row
 const MAX_KB_ROW_LENGTH = Math.max(...KEYBOARD_LAYOUT.map((row) => row.length)) * 2 - 1
+// Sometimes the same character will have multiple evaluations across multiple
+// rows. We resolve the maximum evaluation based on their rank.
+const EVALUATION_RESULT_RANK: { [result in EvaluationResult]: number } = {
+  correct: 2,
+  misplaced: 1,
+  wrong: 0,
+}
 
 export default class HumanGuesser implements Guesser {
   private validWords!: Set<string>
@@ -16,10 +24,26 @@ export default class HumanGuesser implements Guesser {
   }
 
   private printKeyboard = (evaluations: GuessEvaluation[]) => {
-    const usedCharacters: { [char: string]: GuessCharacterEvaluation['result'] } = {}
+    const usedCharacters: { [char: string]: EvaluationResult } = {}
+
+    // Using the `EVALUATION_RESULT_RANK` above to get the best evaluation we've
+    // got for the current key so far.
+    function resolveEvaluationResult(
+      oldResult: EvaluationResult | undefined,
+      newResult: EvaluationResult
+    ): EvaluationResult {
+      if (!oldResult) return newResult
+      return EVALUATION_RESULT_RANK[oldResult] < EVALUATION_RESULT_RANK[newResult]
+        ? newResult
+        : oldResult
+    }
+
     for (const evaluation of evaluations) {
       for (const charEvaluation of evaluation) {
-        usedCharacters[charEvaluation.character] = charEvaluation.result
+        usedCharacters[charEvaluation.character] = resolveEvaluationResult(
+          usedCharacters[charEvaluation.character],
+          charEvaluation.result
+        )
       }
     }
     for (const keyboardRow of KEYBOARD_LAYOUT) {
@@ -27,20 +51,7 @@ export default class HumanGuesser implements Guesser {
       const leadingSpaces = (MAX_KB_ROW_LENGTH - rowLength) / 2
       console.log(
         ' '.repeat(leadingSpaces) +
-          keyboardRow
-            .map((key) => {
-              switch (usedCharacters[key]) {
-                case 'correct':
-                  return chalk.green(key.toUpperCase())
-                case 'misplaced':
-                  return chalk.yellow(key.toUpperCase())
-                case 'wrong':
-                  return chalk.gray(key.toUpperCase())
-                default:
-                  return chalk.white(key.toUpperCase())
-              }
-            })
-            .join(' ')
+          keyboardRow.map((key) => formatCharEvaluation(key, usedCharacters[key])).join(' ')
       )
     }
   }
@@ -48,23 +59,14 @@ export default class HumanGuesser implements Guesser {
   private printGameState = (state: GameState) => {
     console.log(chalk.bold('----------------'))
     console.log(chalk.bold('Guesses:'))
-    for (let guessIndex = 0; guessIndex < state.guesses.length; ++guessIndex) {
+    state.guesses.forEach((guess, guessIndex) => {
       console.log(
         guessIndex + 1,
         state.guesses[guessIndex]
-          .map((char) => {
-            switch (char.result) {
-              case 'correct':
-                return chalk.green(char.character.toUpperCase())
-              case 'misplaced':
-                return chalk.yellow(char.character.toUpperCase())
-              case 'wrong':
-                return chalk.gray(char.character.toUpperCase())
-            }
-          })
+          .map(({ character, result }) => formatCharEvaluation(character, result))
           .join('')
       )
-    }
+    })
     console.log()
     this.printKeyboard(state.guesses)
     console.log()

@@ -5,6 +5,7 @@ import GameCoordinator from './game/GameCoordinator'
 import HumanGuesser from './guessers/HumanGuesser'
 import { Evaluator, Guesser } from './models/Interfaces'
 import _ from 'lodash'
+import formatCharEvaluation from './utils/formatCharEvaluation'
 
 const WORD_LENGTH = 5
 const MAX_GUESSES = 6
@@ -30,7 +31,17 @@ async function main() {
     console.log('Answer:', chalk.yellow(answer.toUpperCase()))
   }
 
-  console.log('')
+  console.log()
+
+  // Print out the user's guesses
+  stats.guesses.forEach((guess, index) => {
+    console.log(
+      index + 1,
+      guess.map(({ character, result }) => formatCharEvaluation(character, result)).join('')
+    )
+  })
+
+  console.log()
 
   // Log standard Wordle shareable
   console.log(`Wordle ${stats.guesses.length}/${MAX_GUESSES}`)
