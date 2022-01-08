@@ -205,7 +205,7 @@ export default class ParametricGuesser implements Guesser {
     let bestScore = 0
     let bestGuess: string | undefined
 
-    for (const word of this.dictionary) {
+    for (const word of this.filteredDictionary) {
       const score = this.evaluateWordChoice(word, guessMetadata, urgencyFactor)
       if (score <= bestScore) continue
       bestScore = score
