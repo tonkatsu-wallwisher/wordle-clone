@@ -17,11 +17,11 @@ export interface GameState extends GameParameters {
 }
 
 export interface Evaluator {
-  prepare(): Promise<void>
+  prepare(params: GameParameters): Promise<void>
   evaluateGuess(guess: string): Promise<GuessEvaluation>
 }
 
 export interface Guesser {
-  prepare(): Promise<void>
+  prepare(params: GameParameters): Promise<void>
   nextGuess(state: GameState): Promise<string>
 }
