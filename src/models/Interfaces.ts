@@ -7,8 +7,12 @@ export interface GuessCharacterEvaluation {
 
 export type GuessEvaluation = Array<GuessCharacterEvaluation>
 
-export interface GameState {
-  answerLength: number
+export interface GameParameters {
+  readonly answerLength: number
+  readonly maxGuesses: number
+}
+
+export interface GameState extends GameParameters {
   guesses: GuessEvaluation[]
 }
 

@@ -14,7 +14,7 @@ const evaluator: Evaluator = new RandomDictionaryWordEvaluator(WORD_LENGTH)
 const guesser: Guesser = new HumanGuesser()
 
 const coordinator = new GameCoordinator({
-  wordLength: WORD_LENGTH,
+  answerLength: WORD_LENGTH,
   maxGuesses: MAX_GUESSES,
 })
 
