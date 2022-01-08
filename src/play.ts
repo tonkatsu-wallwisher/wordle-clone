@@ -1,35 +1,52 @@
 import chalk from 'chalk'
+import { program, Option } from 'commander'
+import _ from 'lodash'
 import LocalEvaluator from './evaluators/LocalEvaluator'
 import RandomDictionaryWordEvaluator from './evaluators/RandomDictionaryWordEvaluator'
 import GameCoordinator from './game/GameCoordinator'
 import HumanGuesser from './guessers/HumanGuesser'
+import ParametricGuesser from './guessers/ParametricGuesser'
 import { Evaluator, GameParameters, Guesser } from './models/Interfaces'
-import _ from 'lodash'
 import formatCharEvaluation from './utils/formatCharEvaluation'
-// import ParametricGuesser from './guessers/ParametricGuesser'
-
-const WORD_LENGTH = 5
-const MAX_GUESSES = 6
-
-const gameParams: GameParameters = {
-  answerLength: WORD_LENGTH,
-  maxGuesses: MAX_GUESSES,
-}
-
-const evaluator: Evaluator = new RandomDictionaryWordEvaluator()
-// Switch the guesser here for AI play. Remember to uncomment the import too.
-const guesser: Guesser = new HumanGuesser()
-// const guesser: Guesser = new ParametricGuesser({
-//   uniqueness: 0.58,
-//   presence: 0.71,
-//   position: 0.23,
-// })
-
-const coordinator = new GameCoordinator({ ...gameParams })
 
 async function main() {
+  program
+    .addOption(new Option('-l, --length <number>', 'length of the word').default(5))
+    .addOption(new Option('-g, --guesses <number>', 'maximum number of guesses').default(6))
+    .addOption(new Option('-a, --agent <type>', 'player of the game').choices(['ai', 'human']))
+    .parse(process.argv)
+
+  const options = program.opts()
+  const answerLength = parseInt(options.length)
+  const maxGuesses = parseInt(options.guesses)
+  const agent = options.agent as 'ai' | 'human'
+
+  const gameParams: GameParameters = {
+    answerLength,
+    maxGuesses,
+  }
+
+  const evaluator: Evaluator = new RandomDictionaryWordEvaluator()
+  let guesser: Guesser
+  if (agent === 'ai') {
+    guesser = new ParametricGuesser({
+      uniqueness: 0.58,
+      presence: 0.71,
+      position: 0.23,
+    })
+  } else {
+    guesser = new HumanGuesser()
+  }
+
+  const coordinator = new GameCoordinator({ ...gameParams })
+
+  // Prepare the agents
   await Promise.all([evaluator.prepare(gameParams), guesser.prepare(gameParams)])
+
+  // Play the game
   const stats = await coordinator.play(evaluator, guesser)
+
+  // Print out the result
   if (_.last(stats.guesses)!.every((char) => char.result === 'correct')) {
     console.log(chalk.green('Congratulations!'))
   } else {
@@ -53,7 +70,7 @@ async function main() {
   console.log()
 
   // Log standard Wordle shareable
-  console.log(`Wordle ${stats.guesses.length}/${MAX_GUESSES}`)
+  console.log(`Wordle ${stats.guesses.length}/${maxGuesses}`)
   for (const guess of stats.guesses) {
     console.log(
       guess

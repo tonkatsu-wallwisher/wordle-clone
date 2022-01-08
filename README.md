@@ -4,16 +4,21 @@
 
 How to play locally:
 
-```sh
+```
 yarn install
 yarn play
 ```
 
-How to change game parameters:
+You can run `yarn play --help` to see available parameters for the game:
 
-```typescript
-// src/play.ts
+```
+$ yarn play
 
-const WORD_LENGTH = 5 // Change this to guess words of a different length
-const MAX_GUESSES = 6 // Change this to have more/fewer guesses
+Usage: play [options]
+
+Options:
+  -l, --length <number>   length of the word (default: 5)
+  -g, --guesses <number>  maximum number of guesses (default: 6)
+  -a, --agent <type>      player of the game (choices: "ai", "human")
+  -h, --help              display help for command
 ```
