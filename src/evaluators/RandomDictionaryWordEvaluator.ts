@@ -1,18 +1,12 @@
+import { GameParameters } from '../models/Interfaces'
 import selectRandomWord from '../utils/selectRandomWord'
 import LocalEvaluator from './LocalEvaluator'
 
 export default class RandomDictionaryWordEvaluator extends LocalEvaluator {
-  readonly wordLength: number
-
-  constructor(wordLength: number) {
-    super()
-    this.wordLength = wordLength
-  }
-
-  prepare = async () => {
+  prepare = async (params: GameParameters) => {
     if (typeof this.answer === 'string') {
       return
     }
-    this.answer = await selectRandomWord(this.wordLength)
+    this.answer = await selectRandomWord(params.answerLength)
   }
 }

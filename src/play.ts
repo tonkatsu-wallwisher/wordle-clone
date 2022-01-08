@@ -3,23 +3,25 @@ import LocalEvaluator from './evaluators/LocalEvaluator'
 import RandomDictionaryWordEvaluator from './evaluators/RandomDictionaryWordEvaluator'
 import GameCoordinator from './game/GameCoordinator'
 import HumanGuesser from './guessers/HumanGuesser'
-import { Evaluator, Guesser } from './models/Interfaces'
+import { Evaluator, GameParameters, Guesser } from './models/Interfaces'
 import _ from 'lodash'
 import formatCharEvaluation from './utils/formatCharEvaluation'
 
 const WORD_LENGTH = 5
 const MAX_GUESSES = 6
 
-const evaluator: Evaluator = new RandomDictionaryWordEvaluator(WORD_LENGTH)
-const guesser: Guesser = new HumanGuesser()
-
-const coordinator = new GameCoordinator({
+const gameParams: GameParameters = {
   answerLength: WORD_LENGTH,
   maxGuesses: MAX_GUESSES,
-})
+}
+
+const evaluator: Evaluator = new RandomDictionaryWordEvaluator()
+const guesser: Guesser = new HumanGuesser()
+
+const coordinator = new GameCoordinator({ ...gameParams })
 
 async function main() {
-  await Promise.all([evaluator.prepare(), guesser.prepare()])
+  await Promise.all([evaluator.prepare(gameParams), guesser.prepare(gameParams)])
   const stats = await coordinator.play(evaluator, guesser)
   if (_.last(stats.guesses)!.every((char) => char.result === 'correct')) {
     console.log(chalk.green('Congratulations!'))

@@ -1,9 +1,9 @@
-import { Evaluator, GuessEvaluation } from '../models/Interfaces'
+import { Evaluator, GameParameters, GuessEvaluation } from '../models/Interfaces'
 
 export default class LocalEvaluator implements Evaluator {
   answer!: string
 
-  prepare = async () => {
+  prepare = async (params: GameParameters): Promise<void> => {
     // Do nothing
   }
 
