@@ -88,7 +88,10 @@ export default class HumanGuesser implements Guesser {
         output: process.stdout,
       })
 
-      rl.on('error', reject)
+      rl.on('error', (error) => {
+        rl.close()
+        reject(error)
+      })
 
       const promptForGuess = () =>
         new Promise<string>((resolve) => {
