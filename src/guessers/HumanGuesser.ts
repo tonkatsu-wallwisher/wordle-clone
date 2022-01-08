@@ -1,6 +1,12 @@
 import chalk from 'chalk'
 import readline from 'readline'
-import { EvaluationResult, GameState, Guesser, GuessEvaluation } from '../models/Interfaces'
+import {
+  EvaluationResult,
+  GameParameters,
+  GameState,
+  Guesser,
+  GuessEvaluation,
+} from '../models/Interfaces'
 import formatCharEvaluation from '../utils/formatCharEvaluation'
 import readDictionary from '../utils/readDictionary'
 
@@ -19,8 +25,8 @@ const EVALUATION_RESULT_RANK: { [result in EvaluationResult]: number } = {
 export default class HumanGuesser implements Guesser {
   private validWords!: Set<string>
 
-  prepare = async (): Promise<void> => {
-    this.validWords = new Set(await readDictionary())
+  prepare = async (params: GameParameters): Promise<void> => {
+    this.validWords = new Set(await readDictionary(params.answerLength))
   }
 
   private printKeyboard = (evaluations: GuessEvaluation[]) => {
@@ -92,6 +98,7 @@ export default class HumanGuesser implements Guesser {
       const promptForValidGuess = async (): Promise<string> => {
         const guess = await promptForGuess()
         if (guess.length !== state.answerLength) {
+          console.log(chalk.yellow(`'${guess}' is not ${state.answerLength} characters long.`))
           return promptForValidGuess()
         }
         if (!this.validWords.has(guess)) {

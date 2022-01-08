@@ -1,9 +1,6 @@
-import { Evaluator, GameState, Guesser } from '../models/Interfaces'
+import { Evaluator, GameParameters, GameState, Guesser } from '../models/Interfaces'
 
-export interface GameOptions {
-  wordLength: number
-  maxGuesses: number
-}
+export interface GameOptions extends GameParameters {}
 
 export default class GameCoordinator {
   readonly options: GameOptions
@@ -16,7 +13,7 @@ export default class GameCoordinator {
     let guessedCorrectly = false
     const guesses: string[] = []
     const gameState: GameState = {
-      answerLength: this.options.wordLength,
+      ...this.options,
       guesses: [],
     }
 
@@ -26,7 +23,7 @@ export default class GameCoordinator {
       ++guessNumber
     ) {
       const guess = await guesser.nextGuess(gameState)
-      if (guess.length !== this.options.wordLength) {
+      if (guess.length !== this.options.answerLength) {
         throw new Error('Guesser made an invalid guess')
       }
       guesses.push(guess)
