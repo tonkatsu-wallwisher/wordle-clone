@@ -20,7 +20,9 @@ export default class LocalEvaluator implements Evaluator {
         continue
       }
       const charPosition = this.answer.indexOf(char)
-      if (charPosition > -1) {
+      // Special case: If the current char is misplaced, but the same character
+      // is present at the correct position, then we mark the current one as wrong
+      if (charPosition > -1 && guess[charPosition] !== char) {
         evaluations.push({ character: char, result: 'misplaced' })
       } else {
         evaluations.push({ character: char, result: 'wrong' })
