@@ -13,7 +13,11 @@ async function main() {
   program
     .addOption(new Option('-l, --length <number>', 'length of the word').default(5))
     .addOption(new Option('-g, --guesses <number>', 'maximum number of guesses').default(6))
-    .addOption(new Option('-a, --agent <type>', 'player of the game').choices(['ai', 'human']))
+    .addOption(
+      new Option('-a, --agent <type>', 'player of the game')
+        .choices(['ai', 'human'])
+        .default('human')
+    )
     .parse(process.argv)
 
   const options = program.opts()

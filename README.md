@@ -19,6 +19,6 @@ Usage: play [options]
 Options:
   -l, --length <number>   length of the word (default: 5)
   -g, --guesses <number>  maximum number of guesses (default: 6)
-  -a, --agent <type>      player of the game (choices: "ai", "human")
+  -a, --agent <type>      player of the game (choices: "ai", "human", default: "human")
   -h, --help              display help for command
 ```
