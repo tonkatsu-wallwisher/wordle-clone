@@ -69057,7 +69057,6 @@ corevolve
 corf
 corfiote
 corflambo
-corge
 corgi
 corgis
 cory
@@ -159535,7 +159534,6 @@ iterator
 iterators
 iteroparity
 iteroparous
-iters
 iterum
 ithaca
 ithacan
@@ -161782,7 +161780,6 @@ jordanon
 jordans
 jorden
 joree
-jorge
 jorist
 jornada
 jornadas
